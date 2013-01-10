@@ -1,0 +1,1115 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head id="Head1"><title>
+  人立方读心机器人Q20
+</title><meta property="og:title" content="人立方Q20读心机器人" /><meta property="og:image" content="http://renlifang.msra.cn/Q20/images/robotStateSucess.png" /><meta property="og:description" content="我是Q20，来自人立方智慧网络！你心中想一个公众人物，我能猜出TA是谁！" /><meta property="og:site_name" content="人立方" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript">
+        var Y = -20;
+        var leftX = -300;
+        var rightX = 300;
+
+        var NoError = 0;
+        var UnknownError = 1;
+        var InvaildAnswer = 2;
+        var InvaildName = 3;
+        var InvaildKeyword = 4;
+        var InvaildQuestion = 5;
+        var InvaildQA = 6;
+		
+		var session_random;		
+        function startNewSession() {
+            session_random=-1;
+        }
+		function getSessionID() {            
+            if (session_random == -1) {
+                session_random = getNumber(9);                
+            }
+            return session_random;
+        }
+		
+        function startGame() {
+            startNewSession();
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/Q20/Handlers/HandlerQ20.ashx",
+                data: { uid: getUserID(), sid: getSessionID(), a: "InitQuestionHandler" },
+                success: function (result) {
+                    switch (result.errNo) {
+                        case NoError:
+                            $("#backagainArea").show();
+                            $(".back").hide();
+                            $("#questionCmd").show();
+                            $("#questionContent").text(result.question);
+                            resetTooltip();
+                            $("#questionFeedback").show();
+                            SelectRobots("normalRobot");
+                            ShowAnswerButtons();
+                            break;
+                        case UnknownError:
+                            HideAllArea();
+                            $("#errorArea").show();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+
+        function answerQuestion(sender) {
+            var choiceAction = sender;
+            var feedback = $("#questionFeedback").attr("mark");
+            if (feedback == null || feedback == "")
+                feedback = "0";
+            $("#questionCmd").hide();
+            $("#questionContent").text("");
+            $("#questionFeedback").hide();
+            HideAnswerButtons();
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/Q20/Handlers/HandlerQ20.ashx",
+                data: { uid: getUserID(), sid: getSessionID(), choice: choiceAction, a: "GenerateQuestionHandler", questfd: feedback },
+                success: function (result) {
+                    switch (result.errNo) {
+                        case NoError:
+                            if (result.GetResult) {
+                                HideAllArea();
+                                $("#q20Name").html(result.entityresult);
+                                SelectRobots("guessRobot");
+                                $("#q20GuessAnswer").show();
+                            }
+                            else {
+                                if (result.questionNum > 1) {
+                                    $(".back").show();
+                                }
+                                else {
+                                    $(".back").hide();
+                                }
+                                $("#questionCmd").show();
+                                SelectRobots(result.robotState);
+                                $("#questionContent").text(result.question);
+                                $("#questionFeedback").show();
+                                resetTooltip();
+                                ShowAnswerButtons();
+                            }
+                            break;
+                        case UnknownError:
+                            HideAllArea();
+                            $("#errorArea").show();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+
+        function goPrev() {
+            $("#questionCmd").hide();
+            $("#questionContent").text("");
+            $("#questionFeedback").hide();
+            HideAnswerButtons();
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/Q20/Handlers/HandlerQ20.ashx",
+                data: { a: "ReturnPrevStep" },
+                success: function (result) {
+                    switch (result.errNo) {
+                        case NoError:
+                            if (result.questionNum > 1) {
+                                $(".back").show();
+                            }
+                            else {
+                                $(".back").hide();
+                            }
+                            $("#questionCmd").show();
+                            SelectRobots(result.robotState);
+                            $("#questionContent").text(result.question);
+                            resetTooltip();
+                            $("#questionFeedback").hide();
+                            ShowAnswerButtons();
+                            break;
+                        case UnknownError:
+                            HideAllArea();
+                            $("#errorArea").show();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+
+        function startAnswerMore() {
+            HideAllArea();
+            SelectRobots("normalRobot");
+            $(".numberTip").css("visibility", "visible");
+            $("#questionAreaM").show();
+            $("#questionCmdM").hide();
+            $("#qkeyword").val("");
+            $("#inputquestion").val("");
+            HideAnswerButtonsM();
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/Q20/Handlers/HandlerQ20.ashx",
+                data: { uid: getUserID(), sid: getSessionID(), a: "InitAnswerMoreHandler" },
+                success: function (result) {
+                    switch (result.errNo) {
+                        case NoError:
+                            $("#backagainAreaM").show();
+                            $(".backm").hide();
+                            $("#questionCmdM").show();
+                            $("#questionContentM").text(result.question);
+                            SelectRobots("normalRobot");
+                            ShowAnswerButtonsM();
+                            break;
+                        case UnknownError:
+                            HideAllArea();
+                            $("#errorArea").show();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+
+        function answerQuestionM(sender) {
+            var choiceAction = sender;
+            $("#questionCmdM").hide();
+            $("#questionContentM").text("");
+            HideAnswerButtonsM();
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/Q20/Handlers/HandlerQ20.ashx",
+                data: { uid: getUserID(), sid: getSessionID(), choice: choiceAction, a: "GenerateQuestionMHandler" },
+                success: function (result) {
+                    switch (result.errNo) {
+                        case NoError:
+                            if (result.questionNum > 3) {
+                                reStartGameM();
+                            }
+                            else {
+                                if (result.questionNum > 1) {
+                                    $(".backm").show();
+                                }
+                                else {
+                                    $(".backm").hide();
+                                }
+
+                                if (result.questionNum == 1) {
+                                    $("#numberTip_1").removeClass("alreadydone").addClass("notdone");
+                                    $("#numberTip_2").removeClass("alreadydone").addClass("notdone");
+                                    $("#numberTip_3").removeClass("alreadydone").addClass("notdone");
+                                } else if (result.questionNum == 2) {
+                                    $("#numberTip_1").removeClass("notdone").addClass("alreadydone");
+                                    $("#numberTip_2").removeClass("alreadydone").addClass("notdone");
+                                    $("#numberTip_3").removeClass("alreadydone").addClass("notdone");
+                                } else if (result.questionNum == 3) {
+                                    $("#numberTip_1").removeClass("notdone").addClass("alreadydone");
+                                    $("#numberTip_2").removeClass("notdone").addClass("alreadydone");
+                                    $("#numberTip_3").removeClass("alreadydone").addClass("notdone");
+                                }
+
+                                $("#questionCmdM").show();
+                                SelectRobots("normalRobot");
+                                $("#questionContentM").text(result.question);
+                                ShowAnswerButtonsM();
+                            }
+                            break;
+                        case UnknownError:
+                            HideAllArea();
+                            $("#errorArea").show();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+
+        function goPrevM() {
+            $("#questionCmdM").hide();
+            $("#questionContentM").text("");
+            HideAnswerButtonsM();
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/Q20/Handlers/HandlerQ20.ashx",
+                data: { a: "ReturnPrevStepM" },
+                success: function (result) {
+                    switch (result.errNo) {
+                        case NoError:
+                            if (result.questionNum > 1) {
+                                $(".backm").show();
+                            }
+                            else {
+                                $(".backm").hide();
+                            }
+                            $("#questionCmdM").show();
+                            SelectRobots("normalRobot");
+                            $("#questionContentM").text(result.question);
+                            ShowAnswerButtonsM();
+                            break;
+                        case UnknownError:
+                            HideAllArea();
+                            $("#errorArea").show();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+
+        function reStartGameM() {
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/Q20/Handlers/HandlerQ20.ashx",
+                data: { uid: getUserID(), sid: getSessionID(), a: "SaveAnswerM" },
+                success: function (result) {
+                    switch (result.errNo) {
+                        case NoError:
+                            HideAllArea();
+                            $("#thanksArea").show();
+                            break;
+                        case UnknownError:
+                            HideAllArea();
+                            $("#errorArea").show();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+
+        function GetRightResult() {
+            HideAllArea();
+            HideAllRobots();
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/Q20/Handlers/HandlerQ20.ashx",
+                data: { uid: getUserID(), sid: getSessionID(), a: "RightAnswer" },
+                success: function (result) {
+                    switch (result.errNo) {
+                        case NoError:
+                            SelectRobots("successRobot");
+                            $("#rightname").text(result.name);
+                            $("#rightname_bk").text(result.name);
+                            if (result.weiboname != null && result.weiboname != "") {
+                                weiboShareContent = "我在#人立方#玩了#Q20游戏#，太神奇了，居然猜对了我心里想的人 " + result.name + "(@" + result.weiboname + ") ！你也来试试看吧~";
+                                renrenShareContent = "我在人立方玩了读心机器人游戏，太神奇了，居然猜对了我心里想的人 " + result.name + " ！你也来试试看吧~";
+                                doubanShareContent = "我在人立方玩了读心机器人游戏，太神奇了，居然猜对了我心里想的 " + result.name + " ！你也来试试看吧~";
+                                qqShareContent = "我在人立方玩了读心机器人游戏，太神奇了，居然猜对了我心里想的 " + result.name + " ！你也来试试看吧~";
+                            } else {
+                                weiboShareContent = "我在#人立方#玩了#Q20游戏#，太神奇了，居然猜对了我心里想的人 " + result.name + " ！你也来试试看吧~";
+                                renrenShareContent = "我在人立方玩了读心机器人游戏，太神奇了，居然猜对了我心里想的人 " + result.name + " ！你也来试试看吧~";
+                                doubanShareContent = "我在人立方玩了读心机器人游戏，太神奇了，居然猜对了我心里想的 " + result.name + " ！你也来试试看吧~";
+                                qqShareContent = "我在人立方玩了读心机器人游戏，太神奇了，居然猜对了我心里想的 " + result.name + " ！你也来试试看吧~";
+                            }
+                            $("#rightAnswer").show();
+
+                            break;
+                        case UnknownError:
+                            HideAllArea();
+                            $("#errorArea").show();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+
+        function setNoNameStyle() {
+            if ($("#nowname").text().length > 4 && $("#nowname").text().length <= 8) {
+                $("#nowname").css("top", "35px");
+            } else if ($("#nowname").text().length > 8 && $("#nowname").text().length <= 12) {
+                $("#nowname").css("top", "25px");
+            } else if ($("#nowname").text().length > 12) {
+                $("#nowname").css("top", "15px");
+            }
+        }
+
+        function RightHelp() {
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/Q20/Handlers/HandlerQ20.ashx",
+                data: { uid: getUserID(), sid: getSessionID(), a: "RightHelp" },
+                success: function (result) {
+                    switch (result.errNo) {
+                        case NoError:
+                            HideAllArea();
+                            var htmltext = "";
+                            var relatedNameText = "<ul class=\"related_names_sug_ul\">";
+                            for (var i = 0; i < result.returnlist.length; i++) {
+                                if (i <= 5)
+                                    htmltext += "<div class=\"nameItemWrap\"><a href=\"" + result.renlifangurl + result.returnlist[i].id + "\" class=\"nameItem\" target='_blank'>" + result.returnlist[i].name + "</a><select class=\"itemSelection\" id=\"" + result.returnlist[i].id + "\" name=\"" + result.returnlist[i].id + "\" ><option value=\"2\">是的</option><option selected value=\"0\">不知道</option><option value=\"-2\">不是</option></select><div class=\"clear\"></div></div>";
+                                if (i != 0 && i <= 5)
+                                    relatedNameText += "<li>" + result.returnlist[i].name + "</li>";
+                            }
+                            relatedNameText += "</ul>";
+                            $("#inputname").text(result.returnlist[0].name);
+                            $("#selectname").text(result.returnlist[0].name);
+                            $("#selectname_bk").text(result.returnlist[0].name);
+                            $("#sqrname").text(result.returnlist[0].name);
+                            $("#sqrname_bk").text(result.returnlist[0].name);
+                            $("#similarpeople").html(htmltext);
+                            SelectRobots("normalRobot");
+                            $("#nowname").text(result.returnlist[0].name);
+                            setNoNameStyle();
+
+                            $("#related_names_sug").html(relatedNameText);
+                            $("#qkeyword").val("");
+                            $("#sqerrinfo").html("");
+                            $("#searchQuestion").show();
+                            break;
+                        case UnknownError:
+                            HideAllArea();
+                            $("#errorArea").show();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+
+        function GetWrongResults() {
+            HideAllArea();
+            HideAllRobots();
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/Q20/Handlers/HandlerQ20.ashx",
+                data: { uid: getUserID(), sid: getSessionID(), a: "GetSuggestListHandler" },
+                success: function (result) {
+                    switch (result.errNo) {
+                        case NoError:
+                            $("#choiceList").html(result.htmltext);
+                            $("#inputright").val("");
+                            SelectRobots("errorRobot");
+                            $("#nerrinfo").html("");
+                            $("#wrongAnswer").show();
+                            $("#backagainArea").show();
+                            $(".back").hide();
+                            break;
+                        case UnknownError:
+                            HideAllArea();
+                            $("#errorArea").show();
+                            break;
+                        default:
+                            break;
+
+                    }
+                }
+            });
+        }
+
+        function SendWikiSuggestion(id, name, label) {
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/Q20/Handlers/HandlerQ20.ashx",
+                data: { uid: getUserID(), sid: getSessionID(), suggestion: id, n: name, a: "SendSuggestListHandler" },
+                success: function (result) {
+                    switch (result.errNo) {
+                        case NoError:
+                            HideAllArea();
+                            var htmltext = "";
+                            var relatedNameText = "<ul class=\"related_names_sug_ul\">";
+                            for (var i = 0; i < result.returnlist.length; i++) {
+                                if (i <= 5)
+                                    htmltext += "<div class=\"nameItemWrap\"><a href=\"" + result.renlifangurl + result.returnlist[i].id + "\" class=\"nameItem\" target='_blank'>" + result.returnlist[i].name + "</a><select class=\"itemSelection\" id=\"" + result.returnlist[i].id + "\" name=\"" + result.returnlist[i].id + "\" ><option value=\"2\">是的</option><option selected value=\"0\">不知道</option><option value=\"-2\">不是</option></select><div class=\"clear\"></div></div>";
+                                if (i != 0 && i <= 5)
+                                    relatedNameText += "<li>" + result.returnlist[i].name + "</li>";
+                            }
+                            relatedNameText += "</ul>";
+                            $("#selectname").text(name);
+                            $("#sqrname").text(name);
+                            $("#inputname").text(result.returnlist[0].name);
+                            $("#similarpeople").html(htmltext);
+                            SelectRobots("normalRobot");
+                            $("#nowname").text(result.returnlist[0].name);
+                            setNoNameStyle();
+                            $("#related_names_sug").html(relatedNameText);
+                            $("#qkeyword").val("");
+                            $("#sqerrinfo").html("");
+                            $("#searchQuestion").show();
+                            break;
+                        case UnknownError:
+                            HideAllArea();
+                            $("#errorArea").show();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+
+        function InputAnswer() {
+            var inputName = $("#inputright").val();
+            if (inputName == "" || inputName == "输入名字") {
+                $("#nerrinfo").html("请输入名字");
+            }
+            else if (inputName.length > 256) {
+                $("#nerrinfo").html("名字字数太多");
+            }
+            else {
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    url: "/Q20/Handlers/HandlerQ20.ashx",
+                    data: { uid: getUserID(), sid: getSessionID(), suggestion: inputName, a: "GetSimilarName" },
+                    success: function (result) {
+                        switch (result.errNo) {
+                            case NoError:
+                                HideAllArea();
+                                $("#newname").text(inputName);
+                                $("#selectname").text(inputName);
+                                $("#sqrname").text(inputName);
+                                $("#backagainArea").show();
+                                $(".back").hide();
+                                if (result.res == 0) {
+                                    HideAllRobots();
+                                    InputHelp($('#newname'));
+                                }
+                                else {
+                                    $("#similarnamelist").html(result.htmltext);
+                                    SelectRobots("normalRobot");
+                                    $("#similarName").show();
+                                }
+                                break;
+                            case InvaildName:
+                                $("#nerrinfo").html("名字字数异常");
+                                break;
+                            case UnknownError:
+                                HideAllArea();
+                                $("#errorArea").show();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            }
+        }
+
+        function InputHelp(sender) {
+            var inputName = sender.text();
+            if (inputName == "") {
+                $("#nerrinfo").html("请输入名字");
+            }
+            else if (inputName.length > 256) {
+                $("#nerrinfo").html("名字字数太多");
+            }
+            else {
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    url: "/Q20/Handlers/HandlerQ20.ashx",
+                    data: { uid: getUserID(), sid: getSessionID(), suggestion: inputName, a: "InputRightHandler" },
+                    success: function (result) {
+                        switch (result.errNo) {
+                            case NoError:
+                                HideAllArea();
+                                var htmltext = "";
+                                var relatedNameText = "<ul class=\"related_names_sug_ul\">";
+                                for (var i = 0; i < result.returnlist.length; i++) {
+                                    if (i <= 5)
+                                        htmltext += "<div class=\"nameItemWrap\"><a href=\"" + result.renlifangurl + result.returnlist[i].id + "\" class=\"nameItem\" target='_blank'>" + result.returnlist[i].name + "</a><select class=\"itemSelection\" id=\"" + result.returnlist[i].id + "\" name=\"" + result.returnlist[i].id + "\" ><option value=\"2\">是的</option><option selected value=\"0\">不知道</option><option value=\"-2\">不是</option></select><div class=\"clear\"></div></div>";
+                                    if (i != 0 && i <= 5)
+                                        relatedNameText += "<li>" + result.returnlist[i].name + "</li>";
+                                }
+                                relatedNameText += "</ul>";
+                                $("#inputname").text(result.returnlist[0].name);
+                                $("#similarpeople").html(htmltext);
+                                SelectRobots("normalRobot");
+                                $("#nowname").text(result.returnlist[0].name);
+                                setNoNameStyle();
+                                $("#related_names_sug").html(relatedNameText);
+                                $("#qkeyword").val("");
+                                $("sqerrinfo").html("");
+                                $("#searchQuestion").show();
+                                break;
+                            case InvaildName:
+                                $("#nerrinfo").html("名字字数异常");
+                                break;
+                            case UnknownError:
+                                HideAllArea();
+                                $("#errorArea").show();
+                                break;
+                            default:
+                                break;
+
+                        }
+                    }
+                });
+            }
+        }
+
+ 
+        function getUserID() {
+            var idVal = parseInt($("#user_random").val());
+            if (idVal == -1) {
+                idVal = getNumber7();
+                $("#user_random").val(idVal.toString());
+            }
+
+            return idVal;
+        }
+
+       
+
+
+        function SearchQuestionByKeyword(sender) {
+            var qkeyword = $("#qkeyword").val();
+            if (qkeyword.length == "") {
+                $("#sqerrinfo").html("请输入关键字");
+            }
+            else if (qkeyword.length <= 0 || qkeyword.length > 5) {
+                $("#sqerrinfo").html("关键字长度应该在1到5个字");
+            }
+            else {
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    url: "/Q20/Handlers/HandlerQ20.ashx",
+                    data: { uid: getUserID(), sid: getSessionID(), qkw: qkeyword, a: "SearchQuestionByWord" },
+                    success: function (result) {
+                        switch (result.errNo) {
+                            case NoError:
+                                if (result.questionlist.length > 0) {
+                                    var htmltext = "";
+                                    for (var i = 0; i < result.questionlist.length; i++) {
+                                        htmltext += "?&nbsp;<a href=\"javascript:void(0);\" onclick=\"SendQuestionSuggestion(this)\">" + result.questionlist[i] + "</a><br/>";
+                                    }
+                                    HideAllArea();
+                                    HideAllRobots();
+                                    SelectRobots("normalRobot");
+                                    $("#questionlist").html(htmltext);
+                                    $("#searchQResult").show();
+                                }
+                                else {
+                                    HideAllArea();
+                                    HideAllRobots();
+                                    SendQuestionSuggestion("");
+                                    $("#searchnoquestion").html("没有搜索到问题，请直接输入问题");
+                                    $("#searchnoquestion").show();
+                                }
+                            case InvaildKeyword:
+                                $("#sqerrinfo").html("关键字长度应该在1到5个字");
+                                break;
+                            case UnknownError:
+                                HideAllArea();
+                                $("#errorArea").show();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            }
+        }
+
+        function SendQuestionSuggestion(sender) {
+            HideAllArea();
+            var qtext = $(sender).text();
+            $("#inputquestion").val(qtext);
+            SelectRobots("sideRobot");
+            $("#addQuestion").show();
+        }
+
+        function StartToAddQuestion() {
+            HideAllArea();
+            var qtext = $("#inputqtext").val();
+            $("#inputquestion").val(qtext);
+            SelectRobots("sideRobot");
+            $("#addQuestion").show();
+        }
+
+        function SaveQuestion() {
+            var question = $("#inputquestion").val();
+            var namestr = "";
+            var ansstr = "";
+            $("select").each(function () {
+                if (namestr == "") {
+                    namestr += this.id;
+                    ansstr += $(this).val();
+                }
+                else {
+                    namestr += "," + this.id;
+                    ansstr += "," + $(this).val();
+                }
+            });
+            if (question.length == "") {
+                $("#searchnoquestion").html("请输入问题");
+                $("#searchnoquestion").show();
+            }
+            else if (question.length > 512) {
+                $("#searchnoquestion").html("问题字数太多");
+                $("#searchnoquestion").show();
+            }
+            else {
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    url: "/Q20/Handlers/HandlerQ20.ashx",
+                    data: { uid: getUserID(), sid: getSessionID(), q: question, ns: namestr, as: ansstr, a: "AddQuestion" },
+                    success: function (result) {
+                        switch (result.errNo) {
+                            case NoError:
+                                window.location.href = "index.aspx";
+                                break;
+                            case InvaildQuestion:
+                                $("#searchnoquestion").html("请输入正确的问题");
+                                $("#searchnoquestion").show();
+                                break;
+                            case InvaildQA:
+                                $("#searchnoquestion").html("请至少选择两个人，且答案不同！");
+                                $("#searchnoquestion").show();
+                                break;
+                            case UnknownError:
+                                HideAllArea();
+                                $("#errorArea").show();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            }
+        }
+
+        function bindInputWithInit(inputSelector, initValue) {
+            $(inputSelector).focus(function () {
+                var value = $(inputSelector).val();
+                if (value == initValue) {
+                    value = "";
+                    $(inputSelector).val(value);
+                    $(inputSelector).css("color", "#000000");
+                }
+            });
+
+            $(inputSelector).blur(function () {
+                var value = $(inputSelector).val();
+                if (value == "") {
+                    value = initValue;
+                    $(inputSelector).val(value);
+                    $(inputSelector).css("color", "Gray");
+                }
+            });
+        }
+
+        function resetTooltip() {
+            $("#questionFeedback").attr("mark", "0");
+            $(".bad_quest").removeClass("mark_bad");
+            $(".good_quest").removeClass("mark_good");
+        }
+
+        function initializetTooltip() {
+            $(".tooltiplink").hover(function () {
+                $("#tooltipitem").text($(this).attr("tooltip"));
+                $("#tooltipitem").css("left", ($(this).offset().left - 25) + "px");
+                $("#tooltipitem").css("top", "280px");
+                $("#tooltipitem").show();
+            }, function () {
+                $("#tooltipitem").hide();
+            });
+
+            $(".good_quest").click(function () {
+                if ($(this).hasClass("mark_good")) {
+                    $(this).removeClass("mark_good");
+                    $(".bad_quest").removeClass("mark_bad");
+                    $("#questionFeedback").attr("mark", "0");
+                } else {
+                    $(this).addClass("mark_good");
+                    $(".bad_quest").removeClass("mark_bad");
+                    $("#questionFeedback").attr("mark", "1");
+                }
+            });
+
+            $(".bad_quest").click(function () {
+                if ($(this).hasClass("mark_bad")) {
+                    $(this).removeClass("mark_bad");
+                    $(".good_quest").removeClass("mark_good");
+                    $("#questionFeedback").attr("mark", "0");                   
+                } else {
+                    $(this).addClass("mark_bad");
+                    $(".good_quest").removeClass("mark_good");
+                    $("#questionFeedback").attr("mark", "-1");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            bindInputWithInit("#inputright", "输入名字");
+            bindInputWithInit("#qkeyword", "输入关键词");
+            bindInputWithInit("#inputqtext", "输入问题");
+
+            var _w = 124, _h = 58;
+            var param = {
+                url: location.href,
+                type: '5',
+                count: '0', /**是否显示分享数，1显示(可选)*/
+                appkey: '3658921323', /**您申请的应用appkey,显示分享来源(可选)*/
+                title: '我在#人立方#玩了#Q20游戏#，太神奇了！你也试试看吧~ ', /**分享的文字内容(可选，默认为所在页面的title)*/
+                pic: 'http://renlifang.msra.cn/Q20/images/robotStateSucess.png', /**分享图片的路径(可选)*/
+                ralateUid: '', /**关联用户的UID，分享微博会@该用户(可选)*/
+                rnd: new Date().valueOf()
+            }
+            var temp = [];
+            for (var p in param) {
+                temp.push(p + '=' + encodeURIComponent(param[p] || ''))
+            }
+
+            var cntheight = $(".container").height();
+            var footerheight = $(".footer-wrapper2").height();
+            if (cntheight + footerheight < $(window).height()) {
+                $(".footer-wrapper2").css("top", ($(window).height()) + "px");
+            } else {
+                $(".footer-wrapper2").css("top", (cntheight + footerheight) + "px");
+            }
+
+            initializetTooltip();
+        });
+
+        $(window).resize(function () {
+            var cntheight = $(".container").height();
+            var footerheight = $(".footer-wrapper2").height();
+            if (cntheight + footerheight < $(window).height()) {
+                $(".footer-wrapper2").css("top", ($(window).height()) + "px");
+            } else {
+                $(".footer-wrapper2").css("top", (cntheight + footerheight) + "px");
+            }
+        });
+
+        function gotoAndEdit() {
+            return false;
+        }
+    </script>
+    <link href="/Styles/default.min.css" type="text/css" rel="stylesheet" /><link href="Styles/Site.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        *
+        {
+            font-family: 微软雅黑,Helvetica,宋体;
+        }
+        
+        .change_btn .type5 img.icon {
+            background-position: -32px -32px;
+            height: 24px;
+            width: 106px;
+        }
+        .change_btn img.icon {
+            background: url("http://img.t.sinajs.cn/t35/appstyle/opent/images/app/btn_trans.gif?id=201104131414") repeat scroll 0 0 transparent;
+            border: medium none;
+            height: 32px;
+            width: 32px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <form method="post" action="Index.aspx" id="Form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTIzMDEzNDUyMGRkSCpeb4CJTa+JcVl3UUQfwnfcpRZ3/KJINRFff/2/7hU=" />
+</div>
+
+    <div class="container" style="">
+        <div class="header-wrapper">
+            <div class="header-top">
+            </div>
+            <div class="header-middle">
+                <a href="/Default.aspx" class="header-top-home"></a>
+                <div class="clear">
+                </div>
+            </div>
+            <div class="search-down">
+            </div>
+        </div>
+        <div class="contentSpace">
+            <div class="contentWraper">
+                <input type="hidden" value="-1" name="user_random" id="user_random" />
+                <input type="hidden" value="-1" name="session_random" id="session_random" />
+                <div>
+                    <div id="startArea" class="talkFI" style="display: block;">
+                        <div class="talkInfo">
+                            我是<a href="/baike.aspx" style="color:#1c75bc;font-weight:bold;text-decoration: none;">人立方读心机器人</a>！<br />
+                            <span class="firstIntroDo">你心中想一个公众人物，我能猜出TA是谁！</span></div>
+                        <a href="javascript:void(0);" onclick='startGame()' class="startBTN"></a>
+                    </div>
+                    <div id="questionArea" style="display: none;" class="talkFI">
+                        <div class="questionWrap">
+                            <div id="questionCmd">
+                            </div>
+                            <div id="questionContent">
+                            </div>
+                            <div id="questionFeedback" mark="0">
+                                <a href="javascript:void(0);" class="good_quest tooltiplink" tooltip="这个问题太赞了！"></a>
+                                <a href="javascript:void(0);" class="bad_quest tooltiplink" tooltip="这个问题太烂了！"></a>
+                            </div>
+                        </div>
+                        <div class="answerWrap" id="answerButtons">
+                            <a href="javascript:void(0);" class="yes_an" onclick='answerQuestion("yes")'></a>
+                            <a href="javascript:void(0);" class="unknow_an" onclick='answerQuestion("unknow")'>
+                            </a><a href="javascript:void(0);" class="no_an" onclick='answerQuestion("no")'></a>
+                            <div class="clear">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="questionAreaM" style="display: none" class="talkFI">
+                        <div class="numberTip">
+                            <span class="notdone" id="numberTip_1">1</span>
+                            <span class="notdone" id="numberTip_2">2</span>
+                            <span class="notdone" id="numberTip_3">3</span>
+                        </div>
+                        <div class="questionWrap">
+                            <div id="questionCmdM">
+                            </div>
+                            <div id="questionContentM">
+                            </div>
+                        </div>
+                        <div class="answerWrap" id="answerButtonsM">
+                            <a href="javascript:void(0);" class="yes_an" onclick='answerQuestionM("yes")'></a>
+                            <a href="javascript:void(0);" class="unknow_an" onclick='answerQuestionM("unknow")'>
+                            </a><a href="javascript:void(0);" class="no_an" onclick='answerQuestionM("no")'>
+                            </a>
+                            <div class="clear">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="q20GuessAnswer" style="display: none" class="talkSC">
+                        <div class="finalIntro">
+                            我想一定是：</div>
+                        <div class="showWrap">
+                            <div id="q20Name" class="finalName">
+                            </div>
+                        </div>
+                        <div class="resultWrap" style="padding-top:10px;">
+                            <a href="javascript:void(0);" class="right_an" onclick="GetRightResult()"></a><a
+                                href="javascript:void(0);" class="wrong_an" onclick="GetWrongResults()"></a>
+                            <div class="clear">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="rightAnswer" class="talkSC" style="display: none;">
+                        <div class="rightIntro">
+                            太开心了，我读懂了你的心哦</div>
+                        <div class="resultWrap">
+                            <div id="weiboShare">
+                                <span id="sinaWeiboShare" style="height: 25px; float: left;margin-right:10px;margin-top: -1px;">
+                                    <div class="change_btn">
+                                        <div class="type5">
+                                            <p>
+                                                <a hidefocus="true" href="javascript:;" onclick="share();" title="分享到新浪微博">
+                                                    <img alt="" class="icon" src="http://simg.sinajs.cn/platformstyle/images/common/transparent.gif"></a></p>
+                                        </div>
+                                    </div>
+                                </span>
+                                <span id="renrenShare">
+                                    <a href="javascript:;" type="button" onclick="shareClick()" name="xn_share">
+                                        <img alt="分享人人" width="108" height="24" src="http://dev.renren.com/views/website/inc/images/share05.png"></a>
+                                </span>
+                            </div>
+                            <div id="shareLine">
+                                <span id="doubanShare" style="margin-right:5px;">
+                                    <a href="javascript:;" type="button" onclick="doubanShareClick()" name="db_share">
+                                        <img alt="分享豆瓣" width="108" height="24" src="/App_Themes/cn/images/doubanshare.png"></a>
+                                </span>
+                                <span id="qqShare">
+                                    <a href="javascript:;" type="button" onclick="qqShareClick()" name="qq_share">
+                                        <img alt="分享Qzone" width="108" height="24" src="/App_Themes/cn/images/qzoneshare.png"></a>
+                                </span>
+                            </div>
+                            <div id="rightText">
+                                <b>/&nbsp;&nbsp;</b><a href="Index.aspx">重新游戏</a><br />
+                                <b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="startAnswerMore()">回答更多关于<span id="rightname"></span>的问题</a><br />
+                                <span class="gotoEditRenlifang"><b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="return gotoAndEdit();">编辑<span id="rightname_bk"></span>的关系百科</a><br /></span>
+                                <b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="RightHelp()">教教我吧</a><br />
+                            </div>
+                            <div class="clear">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="wrongAnswer" style="display: none;" class="talkRD">
+                        <span class="relateIntro">唔，应该很接近了。是下面中的一位吗？</span>
+                        <br />
+                        <div id="choiceList" class="QuestionList">
+                            &nbsp;</div>
+                        <div class="inputNameIntro">
+                            都不是吗？告诉我TA的名字吧。</div>
+                        <div class="provideNameWrap">
+                            <div class="provideNameInput">
+                                <input class="nameInput" type="text" value="输入名字" name="inputright" id="inputright" style="font-size: 20px;margin-top:1px;border:0;float:left;margin-left: 5px;color:Gray;"/>
+                                <a href="#" onclick="return InputAnswer(this);" class="q20wrong_inputanswer"></a>
+                            </div>
+                            <span id="nerrinfo"></span>
+                            <div class="clear">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="similarName" class="talkSC" style="display: none">
+                        <div class="relateIntro">
+                            下面这些名字跟您的输入很相近:</div>
+                        <div id="similarnamelist">
+                        </div>
+                        <div class="inputNameIntro">
+                            如果不是，点击<a href="javascript:void(0)" onclick="InputHelp($('#newname'))">这里</a>添加<span
+                                id="newname" name="newname"></span></div>
+                    </div>
+                    <div id="searchQuestion" class="talkRD" style="display: none">
+                        <div class="vsdiv">
+                            <div id="nowname"></div>
+                            <div class="vs-text">VS</div>
+                            <div class="relatedIntr" id="related_names_sug"></div>                      
+                        </div>
+                        <div class="relateIntro" style="padding-right: 100px;font-size:12px;margin-top:0px;padding-top:10px;clear:both;">
+                            希望你能提供区别TA们的问题，输入问题关键字，看看你的问题是否已存在</div>
+                        <div class="relateIntro" style="padding-right: 100px;padding-top:5px;">
+                            <div class="questionKeywordInputDiv">
+                                <div class="questionInputDivWrapper">
+                                    <input type="text" value="" name="qkeyword" id="qkeyword" value="输入关键词" />
+                                    <input type="button" onclick="return SearchQuestionByKeyword();" id="questionInputSubmit"
+                                        class="questionInputBtn" value="" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relateIntro" style="padding-right: 100px;margin-top:15px;">
+                            <b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="startAnswerMore()" class="startAM" style="color: #84acd1;text-decoration: none;">回答更多关于<span id="selectname"></span>的问题</a><br />
+                            <span class="gotoEditRenlifang"><b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="return gotoAndEdit()" class="startAM" style="color: #84acd1;text-decoration: none;">编辑<span id="selectname_bk"></span>的关系百科</a><br /></span>
+                            <b>/&nbsp;&nbsp;</b><a href="Index.aspx" style="color: #84acd1;text-decoration: none;">重新游戏</a>
+                        </div>
+                    </div>
+
+                    <div id="searchQResult" class="talkRD" style="display: none">
+                        <div class="relateIntro">
+                            &nbsp;以下问题是你想问的吗？</div>
+                        <div id="questionlist" name="questionlist" class="QuestionListSuggest">
+                        </div>
+                        <div class="relateIntro" style="font-size:12px;margin-top:2px;">
+                            这些问题都不是你的问题？请添加你的问题：</div>
+                        <div class="relateIntro" style="margin-top:0px;padding-top: 0px;padding-right: 100px;">
+                            <div class="questionInputDiv">
+                                <input type="text" value="" name="inputqtext" id="inputqtext" />
+                                <input type="button" onclick="return StartToAddQuestion();" id="questionUserInputBtn" class="questionUserInputBtn" value=""/>
+                            </div>
+                        </div>
+                        <div class="relateIntro" style="margin-top:0px;padding-top: 15px;">
+                            <b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="startAnswerMore()" class="startAM" style="color: #84acd1;text-decoration: none;">回答更多关于<span id="sqrname"></span>的问题</a><br />
+                            <span class="gotoEditRenlifang"><b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="return gotoAndEdit();" class="startAM" style="color: #84acd1;text-decoration: none;">编辑<span id="sqrname_bk"></span>的关系百科</a><br /></span>
+                            <b>/&nbsp;&nbsp;</b><a href="Index.aspx" style="color: #84acd1;text-decoration: none;">重新游戏</a>
+                        </div>
+                    </div>
+
+                    <div id="addQuestion" style="display: none">
+                        <div id="searchnoquestion" style="display: none; padding: 6px 0px 6px 15px">
+                            </div>
+                        <div style="padding: 6px 0px 6px 15px">
+                            <input type="text" value="你的问题..." name="inputquestion" id="inputquestion" class="questionInput" /></div>
+                        <div class="inputPaneBorder">
+                        </div>
+                        <div id="similarpeople" name="similarpeople">
+                        </div>
+                        <div class="questionAddWrap">
+                            <a href="javascript:void(0);" onclick='SaveQuestion()' class="saveAndContinue"></a>
+                            <!--<a href="javascript:void(0);" onclick="" class="editRenlifang"></a>-->
+                            <a href="Index.aspx" class="cancelEdit"></a>
+                            <div class="clear">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="thanksArea" style="display: none" class="talkFI">
+                        <div style="font-size:30px;color:Black;padding-left: 168px;" class="rightIntro">谢谢</div>
+                        <div class="relateIntro" style="margin-top:30px">
+                            <b>/&nbsp;&nbsp;</b><a href="Index.aspx" style="color: #84acd1;text-decoration: none;">重新游戏</a>
+                        </div>
+                    </div>
+
+                    <div id="errorArea" style="display: none" class="talkFI">
+                        <div style="font-size:30px;color:Black;padding-left: 50px;" class="rightIntro">不好意思，出错了</div>
+                        <div class="relateIntro" style="margin-top:30px">
+                            <b>/&nbsp;&nbsp;</b><a href="Index.aspx" style="color: #84acd1;text-decoration: none;">重新游戏</a>
+                        </div>
+                    </div>
+
+                    <div class="robotWrap" id="normalRobot">
+                    </div>
+                    <div class="sadrobotWrap" id="sadRobot" style="display: none">
+                    </div>
+                    <div class="sad2robotWrap" id="sad2Robot" style="display: none">
+                    </div>
+                    <div class="errorrobotWrap" id="errorRobot" style="display: none">
+                    </div>
+                    <div class="happyrobotWrap" id="happyRobot" style="display: none">
+                    </div>
+                    <div class="happy2robotWrap" id="happy2Robot" style="display: none">
+                    </div>
+                    <div class="successrobotWrap" id="successRobot" style="display: none">
+                    </div>
+                    <div class="robotWrap" id="guessRobot" style="display: none">
+                    </div>
+                    <div class="robotSide" id="sideRobot" style="display: none">
+                    </div>
+       
+                    <div class="clear">
+                    </div>
+                </div>
+            </div>
+            <div class="bottomWrap">
+            </div>
+            <div class="footer-wrapper">
+                <div class="footer-middle">
+                    <div class="fm-first">
+                        <a href="/20questions/entry.aspx?server=1" target="_blank" class="fm-first-content" title="人人对战"></a>
+                    </div>
+                    <div class="fm-second">
+                        <a href="http://www.windowsphone.com/en-US/apps/fb586599-62a3-4013-a2cd-19bc45ecccbc" target="_blank" class="fm-second-content" title="下载Windows Phone版"></a>
+                    </div>
+                    <div class="fm-embed">
+                        |&nbsp;&nbsp;<a style="color:#1c75bc;text-decoration: none;">人物</a> &nbsp;&nbsp;
+                        |&nbsp;&nbsp;<a href="/mq20/index.aspx" style="text-decoration: none;">影视</a>&nbsp;&nbsp;
+                        |&nbsp;&nbsp;<a href="/lq20/index.aspx" style="text-decoration: none;">生物</a>&nbsp;&nbsp;
+                        <!-- |&nbsp;&nbsp;<a href="/fq20/index.aspx" style="text-decoration: none">食物</a>&nbsp;&nbsp;-->
+                        |
+                    </div>
+            
+                    <div id="backagainArea" style="display: none" class="backagainWrap">
+                        <div id="backdiv" style="float: right;margin-top:10px;">
+                            <a href="javascript:void(0);" class="back" onclick='goPrev()'></a><a href="Index.aspx"
+                                class="again"></a>
+                        </div>
+                    </div>
+                    <div id="backagainAreaM" style="display: none" class="backagainWrapm">
+                        <div id="Div2" style="float: right;margin-top:10px;">
+                            <a href="javascript:void(0);" class="backm" onclick='goPrevM()'></a><a href="javascript:void(0);"
+                                class="againm" onclick='reStartGameM()'></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="padding">
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+
+
+    </form>
+</body>
+</html>
