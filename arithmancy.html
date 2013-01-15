@@ -1,13 +1,12 @@
 
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head id="Head1"><title>
-  人立方读心机器人Q20
-</title><meta property="og:title" content="人立方Q20读心机器人" /><meta property="og:image" content="http://renlifang.msra.cn/Q20/images/robotStateSucess.png" /><meta property="og:description" content="我是Q20，来自人立方智慧网络！你心中想一个公众人物，我能猜出TA是谁！" /><meta property="og:site_name" content="人立方" />
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript">
+<html>
+<head>
+<title>人立方读心机器人Q20</title>
+<script type="text/javascript"
+	src="http://code.jquery.com/jquery-1.8.3.min.js" > </script>
+<script type="text/javascript">
         var Y = -20;
         var leftX = -300;
         var rightX = 300;
@@ -802,314 +801,354 @@
             return false;
         }
     </script>
-    <link href="/Styles/default.min.css" type="text/css" rel="stylesheet" /><link href="Styles/Site.css" rel="stylesheet" type="text/css" />
-    <style type="text/css">
-        *
-        {
-            font-family: 微软雅黑,Helvetica,宋体;
-        }
-        
-        .change_btn .type5 img.icon {
-            background-position: -32px -32px;
-            height: 24px;
-            width: 106px;
-        }
-        .change_btn img.icon {
-            background: url("http://img.t.sinajs.cn/t35/appstyle/opent/images/app/btn_trans.gif?id=201104131414") repeat scroll 0 0 transparent;
-            border: medium none;
-            height: 32px;
-            width: 32px;
-            display: inline-block;
-        }
-    </style>
+<link href="/Styles/default.min.css" type="text/css" rel="stylesheet" />
+<link href="Styles/Site.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+* {
+	font-family: 微软雅黑, Helvetica, 宋体;
+}
+
+.change_btn .type5 img.icon {
+	background-position: -32px -32px;
+	height: 24px;
+	width: 106px;
+}
+
+.change_btn img.icon {
+	background:
+		url("http://img.t.sinajs.cn/t35/appstyle/opent/images/app/btn_trans.gif?id=201104131414")
+		repeat scroll 0 0 transparent;
+	border: medium none;
+	height: 32px;
+	width: 32px;
+	display: inline-block;
+}
+</style>
 </head>
 <body>
-    <form method="post" action="Index.aspx" id="Form1">
-<div class="aspNetHidden">
-<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTIzMDEzNDUyMGRkSCpeb4CJTa+JcVl3UUQfwnfcpRZ3/KJINRFff/2/7hU=" />
-</div>
-
-    <div class="container" style="">
-        <div class="header-wrapper">
-            <div class="header-top">
-            </div>
-            <div class="header-middle">
-                <a href="/Default.aspx" class="header-top-home"></a>
-                <div class="clear">
-                </div>
-            </div>
-            <div class="search-down">
-            </div>
-        </div>
-        <div class="contentSpace">
-            <div class="contentWraper">
-                <input type="hidden" value="-1" name="user_random" id="user_random" />
-                <input type="hidden" value="-1" name="session_random" id="session_random" />
-                <div>
-                    <div id="startArea" class="talkFI" style="display: block;">
-                        <div class="talkInfo">
-                            我是<a href="/baike.aspx" style="color:#1c75bc;font-weight:bold;text-decoration: none;">人立方读心机器人</a>！<br />
-                            <span class="firstIntroDo">你心中想一个公众人物，我能猜出TA是谁！</span></div>
-                        <a href="javascript:void(0);" onclick='startGame()' class="startBTN"></a>
-                    </div>
-                    <div id="questionArea" style="display: none;" class="talkFI">
-                        <div class="questionWrap">
-                            <div id="questionCmd">
-                            </div>
-                            <div id="questionContent">
-                            </div>
-                            <div id="questionFeedback" mark="0">
-                                <a href="javascript:void(0);" class="good_quest tooltiplink" tooltip="这个问题太赞了！"></a>
-                                <a href="javascript:void(0);" class="bad_quest tooltiplink" tooltip="这个问题太烂了！"></a>
-                            </div>
-                        </div>
-                        <div class="answerWrap" id="answerButtons">
-                            <a href="javascript:void(0);" class="yes_an" onclick='answerQuestion("yes")'></a>
-                            <a href="javascript:void(0);" class="unknow_an" onclick='answerQuestion("unknow")'>
-                            </a><a href="javascript:void(0);" class="no_an" onclick='answerQuestion("no")'></a>
-                            <div class="clear">
-                            </div>
-                        </div>
-                    </div>
-                    <div id="questionAreaM" style="display: none" class="talkFI">
-                        <div class="numberTip">
-                            <span class="notdone" id="numberTip_1">1</span>
-                            <span class="notdone" id="numberTip_2">2</span>
-                            <span class="notdone" id="numberTip_3">3</span>
-                        </div>
-                        <div class="questionWrap">
-                            <div id="questionCmdM">
-                            </div>
-                            <div id="questionContentM">
-                            </div>
-                        </div>
-                        <div class="answerWrap" id="answerButtonsM">
-                            <a href="javascript:void(0);" class="yes_an" onclick='answerQuestionM("yes")'></a>
-                            <a href="javascript:void(0);" class="unknow_an" onclick='answerQuestionM("unknow")'>
-                            </a><a href="javascript:void(0);" class="no_an" onclick='answerQuestionM("no")'>
-                            </a>
-                            <div class="clear">
-                            </div>
-                        </div>
-                    </div>
-                    <div id="q20GuessAnswer" style="display: none" class="talkSC">
-                        <div class="finalIntro">
-                            我想一定是：</div>
-                        <div class="showWrap">
-                            <div id="q20Name" class="finalName">
-                            </div>
-                        </div>
-                        <div class="resultWrap" style="padding-top:10px;">
-                            <a href="javascript:void(0);" class="right_an" onclick="GetRightResult()"></a><a
-                                href="javascript:void(0);" class="wrong_an" onclick="GetWrongResults()"></a>
-                            <div class="clear">
-                            </div>
-                        </div>
-                    </div>
-                    <div id="rightAnswer" class="talkSC" style="display: none;">
-                        <div class="rightIntro">
-                            太开心了，我读懂了你的心哦</div>
-                        <div class="resultWrap">
-                            <div id="weiboShare">
-                                <span id="sinaWeiboShare" style="height: 25px; float: left;margin-right:10px;margin-top: -1px;">
-                                    <div class="change_btn">
-                                        <div class="type5">
-                                            <p>
-                                                <a hidefocus="true" href="javascript:;" onclick="share();" title="分享到新浪微博">
-                                                    <img alt="" class="icon" src="http://simg.sinajs.cn/platformstyle/images/common/transparent.gif"></a></p>
-                                        </div>
-                                    </div>
-                                </span>
-                                <span id="renrenShare">
-                                    <a href="javascript:;" type="button" onclick="shareClick()" name="xn_share">
-                                        <img alt="分享人人" width="108" height="24" src="http://dev.renren.com/views/website/inc/images/share05.png"></a>
-                                </span>
-                            </div>
-                            <div id="shareLine">
-                                <span id="doubanShare" style="margin-right:5px;">
-                                    <a href="javascript:;" type="button" onclick="doubanShareClick()" name="db_share">
-                                        <img alt="分享豆瓣" width="108" height="24" src="/App_Themes/cn/images/doubanshare.png"></a>
-                                </span>
-                                <span id="qqShare">
-                                    <a href="javascript:;" type="button" onclick="qqShareClick()" name="qq_share">
-                                        <img alt="分享Qzone" width="108" height="24" src="/App_Themes/cn/images/qzoneshare.png"></a>
-                                </span>
-                            </div>
-                            <div id="rightText">
-                                <b>/&nbsp;&nbsp;</b><a href="Index.aspx">重新游戏</a><br />
-                                <b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="startAnswerMore()">回答更多关于<span id="rightname"></span>的问题</a><br />
-                                <span class="gotoEditRenlifang"><b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="return gotoAndEdit();">编辑<span id="rightname_bk"></span>的关系百科</a><br /></span>
-                                <b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="RightHelp()">教教我吧</a><br />
-                            </div>
-                            <div class="clear">
-                            </div>
-                        </div>
-                    </div>
-                    <div id="wrongAnswer" style="display: none;" class="talkRD">
-                        <span class="relateIntro">唔，应该很接近了。是下面中的一位吗？</span>
-                        <br />
-                        <div id="choiceList" class="QuestionList">
-                            &nbsp;</div>
-                        <div class="inputNameIntro">
-                            都不是吗？告诉我TA的名字吧。</div>
-                        <div class="provideNameWrap">
-                            <div class="provideNameInput">
-                                <input class="nameInput" type="text" value="输入名字" name="inputright" id="inputright" style="font-size: 20px;margin-top:1px;border:0;float:left;margin-left: 5px;color:Gray;"/>
-                                <a href="#" onclick="return InputAnswer(this);" class="q20wrong_inputanswer"></a>
-                            </div>
-                            <span id="nerrinfo"></span>
-                            <div class="clear">
-                            </div>
-                        </div>
-                    </div>
-                    <div id="similarName" class="talkSC" style="display: none">
-                        <div class="relateIntro">
-                            下面这些名字跟您的输入很相近:</div>
-                        <div id="similarnamelist">
-                        </div>
-                        <div class="inputNameIntro">
-                            如果不是，点击<a href="javascript:void(0)" onclick="InputHelp($('#newname'))">这里</a>添加<span
-                                id="newname" name="newname"></span></div>
-                    </div>
-                    <div id="searchQuestion" class="talkRD" style="display: none">
-                        <div class="vsdiv">
-                            <div id="nowname"></div>
-                            <div class="vs-text">VS</div>
-                            <div class="relatedIntr" id="related_names_sug"></div>                      
-                        </div>
-                        <div class="relateIntro" style="padding-right: 100px;font-size:12px;margin-top:0px;padding-top:10px;clear:both;">
-                            希望你能提供区别TA们的问题，输入问题关键字，看看你的问题是否已存在</div>
-                        <div class="relateIntro" style="padding-right: 100px;padding-top:5px;">
-                            <div class="questionKeywordInputDiv">
-                                <div class="questionInputDivWrapper">
-                                    <input type="text" value="" name="qkeyword" id="qkeyword" value="输入关键词" />
-                                    <input type="button" onclick="return SearchQuestionByKeyword();" id="questionInputSubmit"
-                                        class="questionInputBtn" value="" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="relateIntro" style="padding-right: 100px;margin-top:15px;">
-                            <b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="startAnswerMore()" class="startAM" style="color: #84acd1;text-decoration: none;">回答更多关于<span id="selectname"></span>的问题</a><br />
-                            <span class="gotoEditRenlifang"><b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="return gotoAndEdit()" class="startAM" style="color: #84acd1;text-decoration: none;">编辑<span id="selectname_bk"></span>的关系百科</a><br /></span>
-                            <b>/&nbsp;&nbsp;</b><a href="Index.aspx" style="color: #84acd1;text-decoration: none;">重新游戏</a>
-                        </div>
-                    </div>
-
-                    <div id="searchQResult" class="talkRD" style="display: none">
-                        <div class="relateIntro">
-                            &nbsp;以下问题是你想问的吗？</div>
-                        <div id="questionlist" name="questionlist" class="QuestionListSuggest">
-                        </div>
-                        <div class="relateIntro" style="font-size:12px;margin-top:2px;">
-                            这些问题都不是你的问题？请添加你的问题：</div>
-                        <div class="relateIntro" style="margin-top:0px;padding-top: 0px;padding-right: 100px;">
-                            <div class="questionInputDiv">
-                                <input type="text" value="" name="inputqtext" id="inputqtext" />
-                                <input type="button" onclick="return StartToAddQuestion();" id="questionUserInputBtn" class="questionUserInputBtn" value=""/>
-                            </div>
-                        </div>
-                        <div class="relateIntro" style="margin-top:0px;padding-top: 15px;">
-                            <b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="startAnswerMore()" class="startAM" style="color: #84acd1;text-decoration: none;">回答更多关于<span id="sqrname"></span>的问题</a><br />
-                            <span class="gotoEditRenlifang"><b>/&nbsp;&nbsp;</b><a href="javascript:void(0);" onclick="return gotoAndEdit();" class="startAM" style="color: #84acd1;text-decoration: none;">编辑<span id="sqrname_bk"></span>的关系百科</a><br /></span>
-                            <b>/&nbsp;&nbsp;</b><a href="Index.aspx" style="color: #84acd1;text-decoration: none;">重新游戏</a>
-                        </div>
-                    </div>
-
-                    <div id="addQuestion" style="display: none">
-                        <div id="searchnoquestion" style="display: none; padding: 6px 0px 6px 15px">
-                            </div>
-                        <div style="padding: 6px 0px 6px 15px">
-                            <input type="text" value="你的问题..." name="inputquestion" id="inputquestion" class="questionInput" /></div>
-                        <div class="inputPaneBorder">
-                        </div>
-                        <div id="similarpeople" name="similarpeople">
-                        </div>
-                        <div class="questionAddWrap">
-                            <a href="javascript:void(0);" onclick='SaveQuestion()' class="saveAndContinue"></a>
-                            <!--<a href="javascript:void(0);" onclick="" class="editRenlifang"></a>-->
-                            <a href="Index.aspx" class="cancelEdit"></a>
-                            <div class="clear">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="thanksArea" style="display: none" class="talkFI">
-                        <div style="font-size:30px;color:Black;padding-left: 168px;" class="rightIntro">谢谢</div>
-                        <div class="relateIntro" style="margin-top:30px">
-                            <b>/&nbsp;&nbsp;</b><a href="Index.aspx" style="color: #84acd1;text-decoration: none;">重新游戏</a>
-                        </div>
-                    </div>
-
-                    <div id="errorArea" style="display: none" class="talkFI">
-                        <div style="font-size:30px;color:Black;padding-left: 50px;" class="rightIntro">不好意思，出错了</div>
-                        <div class="relateIntro" style="margin-top:30px">
-                            <b>/&nbsp;&nbsp;</b><a href="Index.aspx" style="color: #84acd1;text-decoration: none;">重新游戏</a>
-                        </div>
-                    </div>
-
-                    <div class="robotWrap" id="normalRobot">
-                    </div>
-                    <div class="sadrobotWrap" id="sadRobot" style="display: none">
-                    </div>
-                    <div class="sad2robotWrap" id="sad2Robot" style="display: none">
-                    </div>
-                    <div class="errorrobotWrap" id="errorRobot" style="display: none">
-                    </div>
-                    <div class="happyrobotWrap" id="happyRobot" style="display: none">
-                    </div>
-                    <div class="happy2robotWrap" id="happy2Robot" style="display: none">
-                    </div>
-                    <div class="successrobotWrap" id="successRobot" style="display: none">
-                    </div>
-                    <div class="robotWrap" id="guessRobot" style="display: none">
-                    </div>
-                    <div class="robotSide" id="sideRobot" style="display: none">
-                    </div>
-       
-                    <div class="clear">
-                    </div>
-                </div>
-            </div>
-            <div class="bottomWrap">
-            </div>
-            <div class="footer-wrapper">
-                <div class="footer-middle">
-                    <div class="fm-first">
-                        <a href="/20questions/entry.aspx?server=1" target="_blank" class="fm-first-content" title="人人对战"></a>
-                    </div>
-                    <div class="fm-second">
-                        <a href="http://www.windowsphone.com/en-US/apps/fb586599-62a3-4013-a2cd-19bc45ecccbc" target="_blank" class="fm-second-content" title="下载Windows Phone版"></a>
-                    </div>
-                    <div class="fm-embed">
-                        |&nbsp;&nbsp;<a style="color:#1c75bc;text-decoration: none;">人物</a> &nbsp;&nbsp;
-                        |&nbsp;&nbsp;<a href="/mq20/index.aspx" style="text-decoration: none;">影视</a>&nbsp;&nbsp;
-                        |&nbsp;&nbsp;<a href="/lq20/index.aspx" style="text-decoration: none;">生物</a>&nbsp;&nbsp;
-                        <!-- |&nbsp;&nbsp;<a href="/fq20/index.aspx" style="text-decoration: none">食物</a>&nbsp;&nbsp;-->
-                        |
-                    </div>
-            
-                    <div id="backagainArea" style="display: none" class="backagainWrap">
-                        <div id="backdiv" style="float: right;margin-top:10px;">
-                            <a href="javascript:void(0);" class="back" onclick='goPrev()'></a><a href="Index.aspx"
-                                class="again"></a>
-                        </div>
-                    </div>
-                    <div id="backagainAreaM" style="display: none" class="backagainWrapm">
-                        <div id="Div2" style="float: right;margin-top:10px;">
-                            <a href="javascript:void(0);" class="backm" onclick='goPrevM()'></a><a href="javascript:void(0);"
-                                class="againm" onclick='reStartGameM()'></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="padding">
-        </div>
-        <div class="clear">
-        </div>
-    </div>
+<div></div>
 
 
-    </form>
+	<form method="post" action="Index.aspx" id="Form1">
+		<div class="aspNetHidden">
+			<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"
+				value="/wEPDwUKLTIzMDEzNDUyMGRkSCpeb4CJTa+JcVl3UUQfwnfcpRZ3/KJINRFff/2/7hU=" />
+		</div>
+
+		<div class="container" style="">
+			<div class="header-wrapper">
+				<div class="header-top"></div>
+				<div class="header-middle">
+					<a href="/Default.aspx" class="header-top-home"></a>
+					<div class="clear"></div>
+				</div>
+				<div class="search-down"></div>
+			</div>
+			<div class="contentSpace">
+				<div class="contentWraper">
+					<input type="hidden" value="-1" name="user_random" id="user_random" />
+					<input type="hidden" value="-1" name="session_random"
+						id="session_random" />
+					<div>
+						<div id="startArea" class="talkFI" style="display: block;">
+							<div class="talkInfo">
+								我是<a href="/baike.aspx"
+									style="color: #1c75bc; font-weight: bold; text-decoration: none;">人立方读心机器人</a>！<br />
+								<span class="firstIntroDo">你心中想一个公众人物，我能猜出TA是谁！</span>
+							</div>
+							<a href="javascript:void(0);" onclick='startGame()'
+								class="startBTN"></a>
+						</div>
+						<div id="questionArea" style="display: none;" class="talkFI">
+							<div class="questionWrap">
+								<div id="questionCmd"></div>
+								<div id="questionContent"></div>
+								<div id="questionFeedback" mark="0">
+									<a href="javascript:void(0);" class="good_quest tooltiplink"
+										tooltip="这个问题太赞了！"></a> <a href="javascript:void(0);"
+										class="bad_quest tooltiplink" tooltip="这个问题太烂了！"></a>
+								</div>
+							</div>
+							<div class="answerWrap" id="answerButtons">
+								<a href="javascript:void(0);" class="yes_an"
+									onclick='answerQuestion("yes")'></a> <a
+									href="javascript:void(0);" class="unknow_an"
+									onclick='answerQuestion("unknow")'> </a><a
+									href="javascript:void(0);" class="no_an"
+									onclick='answerQuestion("no")'></a>
+								<div class="clear"></div>
+							</div>
+						</div>
+						<div id="questionAreaM" style="display: none" class="talkFI">
+							<div class="numberTip">
+								<span class="notdone" id="numberTip_1">1</span> <span
+									class="notdone" id="numberTip_2">2</span> <span class="notdone"
+									id="numberTip_3">3</span>
+							</div>
+							<div class="questionWrap">
+								<div id="questionCmdM"></div>
+								<div id="questionContentM"></div>
+							</div>
+							<div class="answerWrap" id="answerButtonsM">
+								<a href="javascript:void(0);" class="yes_an"
+									onclick='answerQuestionM("yes")'></a> <a
+									href="javascript:void(0);" class="unknow_an"
+									onclick='answerQuestionM("unknow")'> </a><a
+									href="javascript:void(0);" class="no_an"
+									onclick='answerQuestionM("no")'> </a>
+								<div class="clear"></div>
+							</div>
+						</div>
+						<div id="q20GuessAnswer" style="display: none" class="talkSC">
+							<div class="finalIntro">我想一定是：</div>
+							<div class="showWrap">
+								<div id="q20Name" class="finalName"></div>
+							</div>
+							<div class="resultWrap" style="padding-top: 10px;">
+								<a href="javascript:void(0);" class="right_an"
+									onclick="GetRightResult()"></a><a href="javascript:void(0);"
+									class="wrong_an" onclick="GetWrongResults()"></a>
+								<div class="clear"></div>
+							</div>
+						</div>
+						<div id="rightAnswer" class="talkSC" style="display: none;">
+							<div class="rightIntro">太开心了，我读懂了你的心哦</div>
+							<div class="resultWrap">
+								<div id="weiboShare">
+									<span id="sinaWeiboShare"
+										style="height: 25px; float: left; margin-right: 10px; margin-top: -1px;">
+										<div class="change_btn">
+											<div class="type5">
+												<p>
+													<a hidefocus="true" href="javascript:;" onclick="share();"
+														title="分享到新浪微博"> <img alt="" class="icon"
+														src="http://simg.sinajs.cn/platformstyle/images/common/transparent.gif"></a>
+												</p>
+											</div>
+										</div>
+									</span> <span id="renrenShare"> <a href="javascript:;"
+										type="button" onclick="shareClick()" name="xn_share"> <img
+											alt="分享人人" width="108" height="24"
+											src="http://dev.renren.com/views/website/inc/images/share05.png"></a>
+									</span>
+								</div>
+								<div id="shareLine">
+									<span id="doubanShare" style="margin-right: 5px;"> <a
+										href="javascript:;" type="button" onclick="doubanShareClick()"
+										name="db_share"> <img alt="分享豆瓣" width="108" height="24"
+											src="/App_Themes/cn/images/doubanshare.png"></a>
+									</span> <span id="qqShare"> <a href="javascript:;"
+										type="button" onclick="qqShareClick()" name="qq_share"> <img
+											alt="分享Qzone" width="108" height="24"
+											src="/App_Themes/cn/images/qzoneshare.png"></a>
+									</span>
+								</div>
+								<div id="rightText">
+									<b>/&nbsp;&nbsp;</b><a href="Index.aspx">重新游戏</a><br /> <b>/&nbsp;&nbsp;</b><a
+										href="javascript:void(0);" onclick="startAnswerMore()">回答更多关于<span
+										id="rightname"></span>的问题
+									</a><br /> <span class="gotoEditRenlifang"><b>/&nbsp;&nbsp;</b><a
+										href="javascript:void(0);" onclick="return gotoAndEdit();">编辑<span
+											id="rightname_bk"></span>的关系百科
+									</a><br /></span> <b>/&nbsp;&nbsp;</b><a href="javascript:void(0);"
+										onclick="RightHelp()">教教我吧</a><br />
+								</div>
+								<div class="clear"></div>
+							</div>
+						</div>
+						<div id="wrongAnswer" style="display: none;" class="talkRD">
+							<span class="relateIntro">唔，应该很接近了。是下面中的一位吗？</span> <br />
+							<div id="choiceList" class="QuestionList">&nbsp;</div>
+							<div class="inputNameIntro">都不是吗？告诉我TA的名字吧。</div>
+							<div class="provideNameWrap">
+								<div class="provideNameInput">
+									<input class="nameInput" type="text" value="输入名字"
+										name="inputright" id="inputright"
+										style="font-size: 20px; margin-top: 1px; border: 0; float: left; margin-left: 5px; color: Gray;" />
+									<a href="#" onclick="return InputAnswer(this);"
+										class="q20wrong_inputanswer"></a>
+								</div>
+								<span id="nerrinfo"></span>
+								<div class="clear"></div>
+							</div>
+						</div>
+						<div id="similarName" class="talkSC" style="display: none">
+							<div class="relateIntro">下面这些名字跟您的输入很相近:</div>
+							<div id="similarnamelist"></div>
+							<div class="inputNameIntro">
+								如果不是，点击<a href="javascript:void(0)"
+									onclick="InputHelp($('#newname'))">这里</a>添加<span id="newname"
+									name="newname"></span>
+							</div>
+						</div>
+						<div id="searchQuestion" class="talkRD" style="display: none">
+							<div class="vsdiv">
+								<div id="nowname"></div>
+								<div class="vs-text">VS</div>
+								<div class="relatedIntr" id="related_names_sug"></div>
+							</div>
+							<div class="relateIntro"
+								style="padding-right: 100px; font-size: 12px; margin-top: 0px; padding-top: 10px; clear: both;">
+								希望你能提供区别TA们的问题，输入问题关键字，看看你的问题是否已存在</div>
+							<div class="relateIntro"
+								style="padding-right: 100px; padding-top: 5px;">
+								<div class="questionKeywordInputDiv">
+									<div class="questionInputDivWrapper">
+										<input type="text" value="" name="qkeyword" id="qkeyword"
+											value="输入关键词" /> <input type="button"
+											onclick="return SearchQuestionByKeyword();"
+											id="questionInputSubmit" class="questionInputBtn" value="" />
+									</div>
+								</div>
+							</div>
+							<div class="relateIntro"
+								style="padding-right: 100px; margin-top: 15px;">
+								<b>/&nbsp;&nbsp;</b><a href="javascript:void(0);"
+									onclick="startAnswerMore()" class="startAM"
+									style="color: #84acd1; text-decoration: none;">回答更多关于<span
+									id="selectname"></span>的问题
+								</a><br /> <span class="gotoEditRenlifang"><b>/&nbsp;&nbsp;</b><a
+									href="javascript:void(0);" onclick="return gotoAndEdit()"
+									class="startAM" style="color: #84acd1; text-decoration: none;">编辑<span
+										id="selectname_bk"></span>的关系百科
+								</a><br /></span> <b>/&nbsp;&nbsp;</b><a href="Index.aspx"
+									style="color: #84acd1; text-decoration: none;">重新游戏</a>
+							</div>
+						</div>
+
+						<div id="searchQResult" class="talkRD" style="display: none">
+							<div class="relateIntro">&nbsp;以下问题是你想问的吗？</div>
+							<div id="questionlist" name="questionlist"
+								class="QuestionListSuggest"></div>
+							<div class="relateIntro"
+								style="font-size: 12px; margin-top: 2px;">
+								这些问题都不是你的问题？请添加你的问题：</div>
+							<div class="relateIntro"
+								style="margin-top: 0px; padding-top: 0px; padding-right: 100px;">
+								<div class="questionInputDiv">
+									<input type="text" value="" name="inputqtext" id="inputqtext" />
+									<input type="button" onclick="return StartToAddQuestion();"
+										id="questionUserInputBtn" class="questionUserInputBtn"
+										value="" />
+								</div>
+							</div>
+							<div class="relateIntro"
+								style="margin-top: 0px; padding-top: 15px;">
+								<b>/&nbsp;&nbsp;</b><a href="javascript:void(0);"
+									onclick="startAnswerMore()" class="startAM"
+									style="color: #84acd1; text-decoration: none;">回答更多关于<span
+									id="sqrname"></span>的问题
+								</a><br /> <span class="gotoEditRenlifang"><b>/&nbsp;&nbsp;</b><a
+									href="javascript:void(0);" onclick="return gotoAndEdit();"
+									class="startAM" style="color: #84acd1; text-decoration: none;">编辑<span
+										id="sqrname_bk"></span>的关系百科
+								</a><br /></span> <b>/&nbsp;&nbsp;</b><a href="Index.aspx"
+									style="color: #84acd1; text-decoration: none;">重新游戏</a>
+							</div>
+						</div>
+
+						<div id="addQuestion" style="display: none">
+							<div id="searchnoquestion"
+								style="display: none; padding: 6px 0px 6px 15px"></div>
+							<div style="padding: 6px 0px 6px 15px">
+								<input type="text" value="你的问题..." name="inputquestion"
+									id="inputquestion" class="questionInput" />
+							</div>
+							<div class="inputPaneBorder"></div>
+							<div id="similarpeople" name="similarpeople"></div>
+							<div class="questionAddWrap">
+								<a href="javascript:void(0);" onclick='SaveQuestion()'
+									class="saveAndContinue"></a>
+								<!--<a href="javascript:void(0);" onclick="" class="editRenlifang"></a>-->
+								<a href="Index.aspx" class="cancelEdit"></a>
+								<div class="clear"></div>
+							</div>
+						</div>
+
+						<div id="thanksArea" style="display: none" class="talkFI">
+							<div style="font-size: 30px; color: Black; padding-left: 168px;"
+								class="rightIntro">谢谢</div>
+							<div class="relateIntro" style="margin-top: 30px">
+								<b>/&nbsp;&nbsp;</b><a href="Index.aspx"
+									style="color: #84acd1; text-decoration: none;">重新游戏</a>
+							</div>
+						</div>
+
+						<div id="errorArea" style="display: none" class="talkFI">
+							<div style="font-size: 30px; color: Black; padding-left: 50px;"
+								class="rightIntro">不好意思，出错了</div>
+							<div class="relateIntro" style="margin-top: 30px">
+								<b>/&nbsp;&nbsp;</b><a href="Index.aspx"
+									style="color: #84acd1; text-decoration: none;">重新游戏</a>
+							</div>
+						</div>
+
+						<div class="robotWrap" id="normalRobot"></div>
+						<div class="sadrobotWrap" id="sadRobot" style="display: none">
+						</div>
+						<div class="sad2robotWrap" id="sad2Robot" style="display: none">
+						</div>
+						<div class="errorrobotWrap" id="errorRobot" style="display: none">
+						</div>
+						<div class="happyrobotWrap" id="happyRobot" style="display: none">
+						</div>
+						<div class="happy2robotWrap" id="happy2Robot"
+							style="display: none"></div>
+						<div class="successrobotWrap" id="successRobot"
+							style="display: none"></div>
+						<div class="robotWrap" id="guessRobot" style="display: none">
+						</div>
+						<div class="robotSide" id="sideRobot" style="display: none">
+						</div>
+
+						<div class="clear"></div>
+					</div>
+				</div>
+				<div class="bottomWrap"></div>
+				<div class="footer-wrapper">
+					<div class="footer-middle">
+						<div class="fm-first">
+							<a href="/20questions/entry.aspx?server=1" target="_blank"
+								class="fm-first-content" title="人人对战"></a>
+						</div>
+						<div class="fm-second">
+							<a
+								href="http://www.windowsphone.com/en-US/apps/fb586599-62a3-4013-a2cd-19bc45ecccbc"
+								target="_blank" class="fm-second-content"
+								title="下载Windows Phone版"></a>
+						</div>
+						<div class="fm-embed">
+							|&nbsp;&nbsp;<a style="color: #1c75bc; text-decoration: none;">人物</a>
+							&nbsp;&nbsp; |&nbsp;&nbsp;<a href="/mq20/index.aspx"
+								style="text-decoration: none;">影视</a>&nbsp;&nbsp; |&nbsp;&nbsp;<a
+								href="/lq20/index.aspx" style="text-decoration: none;">生物</a>&nbsp;&nbsp;
+							<!-- |&nbsp;&nbsp;<a href="/fq20/index.aspx" style="text-decoration: none">食物</a>&nbsp;&nbsp;-->
+							|
+						</div>
+
+						<div id="backagainArea" style="display: none"
+							class="backagainWrap">
+							<div id="backdiv" style="float: right; margin-top: 10px;">
+								<a href="javascript:void(0);" class="back" onclick='goPrev()'></a><a
+									href="Index.aspx" class="again"></a>
+							</div>
+						</div>
+						<div id="backagainAreaM" style="display: none"
+							class="backagainWrapm">
+							<div id="Div2" style="float: right; margin-top: 10px;">
+								<a href="javascript:void(0);" class="backm" onclick='goPrevM()'></a><a
+									href="javascript:void(0);" class="againm"
+									onclick='reStartGameM()'></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="padding"></div>
+			<div class="clear"></div>
+		</div>
+
+
+	</form>
 </body>
 </html>
